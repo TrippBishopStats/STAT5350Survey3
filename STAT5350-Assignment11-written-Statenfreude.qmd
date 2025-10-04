@@ -2,7 +2,24 @@
 title: "Assignment 11"
 author: "Statenfreude"
 format: html
+execute: 
+  warning: false
+  messages: false
 ---
+
+```{r initial setup}
+library(tidyverse); library(janitor)
+theme_set(theme_minimal())
+df <- read_csv("survey-data.csv") |> clean_names()
+
+# gonna keep respondent just in case there are interesting questions about
+# respondent behaviours.
+df_long <- df |> select(respondent, starts_with("question")) |> 
+  pivot_longer(cols=starts_with("question"), names_to="question", 
+               values_to="response")
+```
+
+
 
 ## Questions
 
@@ -10,9 +27,39 @@ The form of respondent bias your group hopes to illustrate
 
 
 ## Expected results
-
+We expected that the reported usage of passive methods of highlighting and
+re-reading would be more frequent than recall, which is generally more taxing.
+There was some concern that highlighting may be less relevant now that many
+students only use electronic copies of texts and use fewer printed learning
+materials.
 
 ## Results
+
+
+a. the appropriate descriptive results to appropriately summarize each question separately
+b. the results needed to evaluate your expected results
+c. If not included in b, then "appropriately" correlate the results of your questions
+
+
+Re-reading appears to be most widely used. Highlighting is not a common practice
+amongst respondents.
+
+
+
+
+```{r histograms of question responses}
+#| fig-cap: "A comparison of learning method frequency of use among a sample of $n=40$ Univeristy of Wyoming students."
+question_names <- c(question_1 = "Highlighting",
+                    question_2 = "Re-reading",
+                    question_3 = "Recall")
+
+df_long |> ggplot(aes(x=response)) + 
+  geom_bar() + facet_wrap(~question, labeller = as_labeller(question_names)) +
+  labs(
+    y="Frequency", x="Response"
+  )
+
+```
 
 
 ## Conclusions
