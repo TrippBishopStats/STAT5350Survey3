@@ -75,7 +75,7 @@ question_names <- c(question_1 = "Highlighting",
                     question_3 = "Recall")
 
 df_long |> ggplot(aes(x=response)) + 
-  geom_bar(colour="steelblue") + facet_wrap(~question, labeller = as_labeller(question_names)) +
+  geom_bar(fill="steelblue") + facet_wrap(~question, labeller = as_labeller(question_names)) +
   labs(
     y="Frequency", x="Response"
   ) +
@@ -94,7 +94,7 @@ rownames(sum_stats) <- c("Highlighting", "Rereading", "Recall")
 
 sum_stats |> kable(
   caption="Descriptive statistics for questions 1-3. Quesion 2 has the 
-           highest average endorsement of the 3 questions."
+           highest median endorsement of the 3 questions."
 )
 ```
 
