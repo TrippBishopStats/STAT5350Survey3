@@ -1,8 +1,8 @@
 ---
 title: "Assignment 11 - Respondent Bias"
 author: "Statenfreude"
-format:
-  revealjs: 
+format: 
+  pptx: 
     incremental: true
 echo: false
 ---
