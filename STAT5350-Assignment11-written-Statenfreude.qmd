@@ -60,6 +60,11 @@ df_long |> ggplot(aes(x=response)) +
   )
 
 ```
+```{r}
+summary(df$question_1)
+summary(df$question_2)
+summary(df$question_3)
+```
 
 
 ## Conclusions
