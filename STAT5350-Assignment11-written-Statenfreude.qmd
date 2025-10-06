@@ -16,9 +16,18 @@ df <- read_csv("survey-data.csv") |> clean_names()
 # gonna keep respondent just in case there are interesting questions about
 # respondent behaviours.
 df_long <- df |> select(respondent, starts_with("question")) |> 
-  pivot_longer(cols=starts_with("question"), names_to="question", 
-               values_to="response")
+pivot_longer(cols=starts_with("question"), names_to="question", 
+             values_to="response")
 ```
+## Research Question
+What study strategies do university students think are effective and therefore
+used more frequently? To attempt to answer this question, university students
+were asked some questions about their habits. The implicit assumption is that
+students do things they think are effective, so verbal frequency and Likert
+scales were used to gauge which strategies they use. There is a body of evidence
+that indicates that many popular learning methods, including highlighting and
+rereading are ineffective. The same body of research indicates that recall is a
+highly effective learning strategy ($(\text{Brown, Rudiger \& McDonald,2014})^1$).
 
 ## Questions
 The three items each used Likert or Likert-type scales, and were intended to
@@ -40,7 +49,7 @@ mentioned in the introduction.
 We expected that student use of each study method would accurately represent
 their confidence in the *effectiveness* of each study method. From previous
 literature review, we know that highlighting and rereading, although common, are
-not effective study methods $(\text{Brown, Rudiger \& McDonald, 2014})^1$.
+not effective study methods($1$).
 However, they are passive methods, which means they are relatively easy and
 therefore more popular. Contrarily, recall is an effective, active study method.
 Since it is active, it is more difficult, and likely less popular.
