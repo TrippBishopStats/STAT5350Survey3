@@ -1,14 +1,15 @@
 ---
 title: "Assignment 11"
 author: "Statenfreude"
-format: html
+format: pdf
+echo: false
 execute: 
   warning: false
   messages: false
 ---
 
 ```{r initial setup}
-library(tidyverse); library(janitor)
+library(tidyverse); library(janitor); library(kableExtra)
 theme_set(theme_minimal())
 df <- read_csv("survey-data.csv") |> clean_names()
 
@@ -19,54 +20,92 @@ df_long <- df |> select(respondent, starts_with("question")) |>
                values_to="response")
 ```
 
-
-
 ## Questions
+The three items each used Likert or Likert-type scales, and were intended to
+gauge student use of popular study methods.
 
-The form of respondent bias your group hopes to illustrate
+- *I regularly use a highlighter to emphasize important ideas in my learning materials.*  
+- *When preparing for a quiz or test I re-read important passages in my learning materials.*  
+- *Trying to recall important concepts from memory helps me master new material and perform better on quizzes and exams.*
 
+Our goal was to induce acquiescence bias on only the third item. To do so, we
+not only embellished item 3 to make recall appear more favorable, but also
+included an introduction to imply to respondents which study method we were
+‘hoping’ would be viewed most favorably. The biased line in the introduction was
+‘A majority of researchers believe that recall is one of the most effective
+methods for learning new material.’ Neither of the other two methods were
+mentioned in the introduction.
 
 ## Expected results
-We expected that the reported usage of passive methods of highlighting and
-re-reading would be more frequent than recall, which is generally more taxing.
-There was some concern that highlighting may be less relevant now that many
-students only use electronic copies of texts and use fewer printed learning
-materials.
+We expected that student use of each study method would accurately represent
+their confidence in the *effectiveness* of each study method. From previous
+literature review, we know that highlighting and rereading, although common, are
+not effective study methods $(\text{Brown, Rudiger \& McDonald, 2014})^1$.
+However, they are passive methods, which means they are relatively easy and
+therefore more popular. Contrarily, recall is an effective, active study method.
+Since it is active, it is more difficult, and likely less popular.
+
+Underlying this, we believe that students will indicate more frequent use of
+highlighting and rereading, and less frequent use of recall. After biasing the
+recall item, item 3, we believe that students will indicate more frequent use of
+recall than they would have without bias.
+
+We had also suspected that, due to the increasing prevalence of digital notes
+and complementary obsolescence of pen-and-paper notetaking, that the
+highlighting method may be less frequent across respondents.
 
 ## Results
-
-
-a. the appropriate descriptive results to appropriately summarize each question separately
-b. the results needed to evaluate your expected results
-c. If not included in b, then "appropriately" correlate the results of your questions
-
-
-Re-reading appears to be most widely used. Highlighting is not a common practice
-among respondents.
-
-
-
+We expected that highlighting and rereading would be endorsed more highly, on
+average, than recall even with a biased question about recall (question 3). In 
+an unbiased survey, we expect that the discrepancy in means would be larger than
+in the biased survey. All of the empirical distributions were skewed. In the case
+of highlighting, the skew was positive. For the other two methods, the skew was
+negative. In the survey with 40 respondents, our results indicate that
+highlighting had a lower median endorsement (2), considerably lower than recall
+(4) and rereading (5). The interquartile range for highlighting was much larger
+(IQR 1-4) than the other two methods (IQR 4-5). This indicates that the
+variability of highlighter use was much larger than the other two methods. The
+modes of methods were also at opposite extremes. The mode of highlighter use was
+1 and for the other two methods it was 5. 
 
 ```{r histograms of question responses}
-#| fig-cap: "A comparison of learning method frequency of use among a sample of $n=40$ Univeristy of Wyoming students."
+#| fig-cap: "A comparison of learning method frequency of use among a sample ($n=40$) of Univeristy of Wyoming students."
 question_names <- c(question_1 = "Highlighting",
-                    question_2 = "Re-reading",
+                    question_2 = "Rereading",
                     question_3 = "Recall")
 
 df_long |> ggplot(aes(x=response)) + 
-  geom_bar() + facet_wrap(~question, labeller = as_labeller(question_names)) +
+  geom_bar(colour="steelblue") + facet_wrap(~question, labeller = as_labeller(question_names)) +
   labs(
     y="Frequency", x="Response"
+  ) +
+  theme(
+    strip.text = element_text(size = 13, face="bold")
   )
-
 ```
-```{r}
-summary(df$question_1)
-summary(df$question_2)
-summary(df$question_3)
+```{r results descriptive stats}
+sum_stats <- rbind(
+  summary(df$question_1),
+  summary(df$question_2),
+  summary(df$question_3)  
+) 
+
+rownames(sum_stats) <- c("Highlighting", "Rereading", "Recall")
+
+sum_stats |> kable(
+  caption="Descriptive statistics for questions 1-3. Quesion 2 has the 
+           highest average endorsement of the 3 questions."
+)
 ```
 
 
 ## Conclusions
+The descriptive results show differences in students’ reported use of study methods. The median score for highlighting (med = 2) was the lowest, indicating that students generally disagreed with regularly using this method. The median score for rereading (med = 5) was the highest, consistent with prior research(1) showing that rereading is a commonly used but passive study strategy.
 
+The critical comparison is between the biased recall item (med = 4) and the two unbiased items. Despite recall requiring more effort, its median nearly matched rereading and exceeded highlighting. The elevated median for recall suggests a response shift caused by the biased introduction, which framed recall as the most effective method, of those considered, according to “a majority of researchers.”
 
+The small difference between rereading (med = 5) and recall (med = 4) both clustering near the upper end of the Likert scale indicates that participants rated recall much more favorably than expected. This convergence supports the hypothesis that the biased wording induced acquiescence bias, prompting respondents to align their answers with what they believed was a more positive response.
+
+<hr />
+$^1$Brown, Peter C. (2014). Make it stick : the science of successful learning.
+Cambridge, Massachusetts :The Belknap Press of Harvard University Press.
