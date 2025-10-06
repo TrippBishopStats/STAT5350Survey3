@@ -1,26 +1,87 @@
 ---
-title: "My Title"
+title: "Assignment 11 - Respondent Bias"
 author: "Statenfreude"
-format: revealjs
+format:
+  revealjs: 
+    incremental: true
+echo: false
 ---
 
-## Quarto
+```{r initial setup}
+library(tidyverse); library(janitor); library(kableExtra)
+theme_set(theme_minimal())
+df <- read_csv("survey-data.csv") |> clean_names()
 
-Quarto enables you to weave together content and executable code into a finished presentation. To learn more about Quarto presentations see <https://quarto.org/docs/presentations/>.
+# gonna keep respondent just in case there are interesting questions about
+# respondent behaviours.
+df_long <- df |> select(respondent, starts_with("question")) |> 
+  pivot_longer(cols=starts_with("question"), names_to="question", 
+                            values_to="response")
+```   
 
-## Bullets
+## Research Question
+- What study strategies do university students think are effective and used frequently?  
+- Verbal frequency and Likert scales were used to gauge which strategies used. 
+- Many popular learning methods, highlighting & rereading are ineffective.  
+- recall is a highly effective learning strategy but requires more effort
 
-When you click the **Render** button a document will be generated that includes:
+**Make it Stick**, $\text{Brown, Rudiger & McDonald,2014}$
 
--   Content authored with markdown
--   Output from executable code
+## Acquiesence Bias
+- Subjects respond more positively if there is an indication of what is a positive response
+is included in the prompt.  
+- We attempted to bias the question about recall.  
+- The two questions representing passive learning methods were left as unbiased as possible.  
 
-## Code
+## Hypotheses
+- Passive, less effective methods will be more frequent $\to$ Highlighting, rereading  
+- Active, more effective method will be less frequent $\to$ Recall  
+- Highlighting may be less frequent because of digitization  
+- After bias, recall will be more frequent
 
-When you click the **Render** button a presentation will be generated that includes both content and the output of embedded code. You can embed code like this:
+## Results
+- All distributions skewed  
+- Highlighter distribution skewed positive, others negative
+```{r histograms of question responses}
+#| fig-width: 6
+#| fig-height: 4
+#| fig-align: "center"
+question_names <- c(question_1 = "Highlighting",
+                    question_2 = "Rereading",
+                    question_3 = "Recall")
 
-```{r}
-1 + 1
+df_long |> ggplot(aes(x=response)) + 
+  geom_bar(fill="steelblue") + facet_wrap(~question, labeller = as_labeller(question_names)) +
+  labs(
+    y="Frequency", x="Response",
+    title="Learning method use among Univeristy of Wyoming students (n=40)"
+  ) +
+  theme(
+    strip.text = element_text(size = 13, face="bold")
+  )
 ```
+
+## Results (continued)
+- Large IQR for highlighting  
+- Rereading most favoured learning method
+- Recall notably preferred to highlighting
+
+```{r results descriptive stats}
+sum_stats <- rbind(
+  summary(df$question_1),
+  summary(df$question_2),
+  summary(df$question_3)  
+) 
+rownames(sum_stats) <- c("Highlighting", "Rereading", "Recall")
+sum_stats |> kable()
+```
+
+## Conclusion
+- Recall (med=4) and rereading (med=5) very similar  
+- Suggests bias pushed recall results higher  
+- Highlighting (med=2) lowest $\to$ digitization  
+- More difficult, active method performs better/the same after bias
+
+# Thank you!
 
 
