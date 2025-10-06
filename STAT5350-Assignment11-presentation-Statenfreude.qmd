@@ -83,5 +83,3 @@ sum_stats |> kable()
 - More difficult, active method performs better/the same after bias
 
 # Thank you!
-
-
